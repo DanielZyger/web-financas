@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import State, {} from "../../../store/interfaces";
 import { getItemsInThisMonth } from "../../../utils/listByDate";
 import { addMonths, isSameMonth } from "date-fns";
-import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 interface IEstimate {
   id: string | number;
   month: string;
@@ -168,9 +168,9 @@ const Estimates = () => {
               <strong>
                 {getMounthAndYear(new Date(estimate.month), true)}
               </strong>
-              <p>{getCurrencyFormat(estimate.value)}</p>
+              <p>{formatNumberFractionalDigits(estimate.value)}</p>
               <S.GraphIndicator
-                value={getCurrencyFormat(estimate.value)}
+                value={formatNumberFractionalDigits(estimate.value)}
                 heightIndicator={estimate.indicator.toString()}
               />
             </S.GraphItem>

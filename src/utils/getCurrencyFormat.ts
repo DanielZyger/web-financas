@@ -1,9 +1,10 @@
-export function getCurrencyFormat(value: number) {
-  return Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: 2,
-  }).format(value / 100);
+export function formatNumberFractionalDigits(value: number, digits = 2) {
+  const formatNumber = (
+    value: number,
+    options?: Intl.NumberFormatOptions,
+    locale?: string | string[],
+  ) => (Number.isNaN(value) ? '' : Intl.NumberFormat(locale, { useGrouping: false, ...options }).format(value));
+  return formatNumber(value, { maximumFractionDigits: digits });
 }
 
 export const currencyMask = (value: string) => {

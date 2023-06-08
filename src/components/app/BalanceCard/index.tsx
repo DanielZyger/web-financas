@@ -2,7 +2,7 @@ import { FaDollarSign } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import State from "../../../store/interfaces";
 import { getMounthAndYear } from "../../../utils/dateFormats";
-import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import * as S from "./styles";
 import theme from "styled-theming";
 
@@ -36,9 +36,9 @@ const BalanceCard = ({
           {type === "INCOME" && `Receitas ${getMounthAndYear(selectedMonth)}`}
           {type === "EXPANSE" && `Despesas ${getMounthAndYear(selectedMonth)}`}
         </S.Title>
-        <S.Value>{getCurrencyFormat(2000)}</S.Value>
+        <S.Value>{formatNumberFractionalDigits(2000)}</S.Value>
         <S.Subvalue>
-          {`Previsto ${getCurrencyFormat(2000)}`}
+          {`Previsto ${formatNumberFractionalDigits(2000)}`}
         </S.Subvalue>
       </div>
       <div>

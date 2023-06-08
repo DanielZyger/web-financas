@@ -4,7 +4,7 @@ import * as S from "./styles";
 import { GREEN_PRIMARY, RED_PRIMARY } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash } from "react-icons/fa";
 import { getCategoryIcon } from "../../../utils/getCategoryIcon";
-import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 
 import { getDayOfTheMounth } from "../../../utils/dateFormats";
 import { useSelector } from "react-redux";
@@ -82,7 +82,7 @@ export default function Transactions() {
                   <strong>{transaction.title}</strong>
                   <p>
                     {transaction.type === "Expanse" && "- "}
-                    {getCurrencyFormat(transaction.value)}
+                    {formatNumberFractionalDigits(transaction.value)}
                   </p>
                 </S.TextContainer>
                 <p>{getDayOfTheMounth(new Date(transaction.paymentDate))}</p>

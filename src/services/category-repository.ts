@@ -77,8 +77,8 @@ import api from "../config/api";
     });
   }
 
-  export const updateCategory = (category: {name: string, color: string}) => {
-    fetch(`${api}/category`, {
+  export const updateCategory = (category: {id: number, name: string, color: string}) => {
+    fetch(`${api}/category/${category.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -99,13 +99,12 @@ import api from "../config/api";
     });
   }
 
-  export const deleteCategory = (category: {name: string, color: string}) => {
-    fetch(`${api}/category`, {
+  export const deleteCategory = (id: number) => {
+    fetch(`${api}/category/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
     })
     .then(response => {
         if (!response.ok) {

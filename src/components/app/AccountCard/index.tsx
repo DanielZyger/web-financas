@@ -1,7 +1,7 @@
 import * as S from "./styles";
 
 import { MdAccountBalance, MdAccountBalanceWallet } from "react-icons/md";
-import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import { IAccount } from "../../../store/interfaces";
 import { HTMLAttributes } from "react";
 
@@ -35,13 +35,13 @@ const Card = ({ account, censored, balances, ...rest }: CardProps) => {
         <S.Text fontSize="1.125rem">
           {censored
             ? "************"
-            : getCurrencyFormat(balances?.currentBalance || 0)}
+            : formatNumberFractionalDigits(balances?.currentBalance || 0)}
         </S.Text>
         <S.Text fontSize="0.875rem" fontWeight={400}>
           Previsto{" "}
           {censored
             ? "**********"
-            : getCurrencyFormat(balances?.estimateBalance || 0)}
+            : formatNumberFractionalDigits(balances?.estimateBalance || 0)}
         </S.Text>
       </S.Main>
     </S.Container>

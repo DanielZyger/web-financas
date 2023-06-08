@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import * as S from "./styles";
 import { GREEN_SOFT, RED_SOFT } from "../../../styles/global";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import Switch from "react-switch";
 import State, {
   IExpansesOnAccount,
@@ -124,7 +124,7 @@ export default function ItemView({
           )}
         </div>
 
-        <p>{getCurrencyFormat(item.value)}</p>
+        <p>{formatNumberFractionalDigits(item.value)}</p>
       </S.CollapseContent>
 
       <S.Content {...getCollapseProps()}>

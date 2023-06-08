@@ -21,7 +21,6 @@ import { addMessage } from "../../store/modules/Feedbacks";
 import { useEffect } from "react";
 import { useMedia } from "../../utils/media";
 import { sizes } from "../../styles/global";
-import { listCategory, createCategory, getCategoryById } from "../../services/category-repository";
 
 const Home = () => {
   const dispatch = useDispatch<any>();
@@ -36,9 +35,6 @@ const Home = () => {
       });
     }
   };
-
-  console.log(listCategory());
-  console.log('PEGOU DO ID 2', getCategoryById(2))
 
   const handleChangeMenu = (menu: string) => {
     if (menu === "Cartões") {

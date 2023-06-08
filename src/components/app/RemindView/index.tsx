@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import State, { IExpanses, IIncomes } from "../../../store/interfaces";
 import { getFullDayOfTheMounth } from "../../../utils/dateFormats";
-import { getCurrencyFormat } from "../../../utils/getCurrencyFormat";
+import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import Loader from "../../utils/Loader";
 import { useSelector } from "react-redux";
 
@@ -132,7 +132,7 @@ export default function RemindView({
                     <strong>{item.name}</strong>
                   </div>
 
-                  <p>{getCurrencyFormat(item.value)}</p>
+                  <p>{formatNumberFractionalDigits(item.value)}</p>
                 </S.Item>
               </div>
             );
@@ -158,7 +158,7 @@ export default function RemindView({
                         <strong>{i.name}</strong>
                       </div>
 
-                      <p>{getCurrencyFormat(i.value)}</p>
+                      <p>{formatNumberFractionalDigits(i.value)}</p>
                     </S.Item>
                   );
                 })}
