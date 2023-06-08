@@ -1,8 +1,9 @@
 import api from "../config/api";
+import { accountTypes } from "../utils/types";
 
   
-  export const listCategory = () => {
-    fetch(`${api}/category`)
+  export const listInvest = () => {
+    fetch(`${api}/invest`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Sem resposta');
@@ -17,8 +18,8 @@ import api from "../config/api";
     });
   }
 
-  export const getCategoryById = (categoryId: number) => {
-    fetch(`${api}/category/${categoryId}`)
+  export const getInvestById = (investId: number) => {
+    fetch(`${api}/invest/${investId}`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Sem resposta');
@@ -33,13 +34,13 @@ import api from "../config/api";
     });
   }
 
-  export const createCategory = (category: {name: string, color: string}) => {
-    fetch(`${api}/category`, {
+  export const createInvest = (invest: {goal: number, percentage: number, date: Date, value: number}) => {
+    fetch(`${api}/invest`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
+      body: JSON.stringify({ goal: invest.goal, percentage: invest.percentage , date: invest.date, value: invest.value})
     })
     .then(response => {
         if (!response.ok) {
@@ -55,13 +56,13 @@ import api from "../config/api";
     });
   }
 
-  export const updateCategory = (category: {name: string, color: string}) => {
-    fetch(`${api}/category`, {
+  export const updateInvest = (invest: {goal: number, percentage: number, date: Date, value: number}) => {
+    fetch(`${api}/invest`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
+      body: JSON.stringify({ goal: invest.goal, percentage: invest.percentage, date: invest.date, value: invest.value })
     })
     .then(response => {
         if (!response.ok) {
@@ -77,13 +78,13 @@ import api from "../config/api";
     });
   }
 
-  export const deleteCategory = (category: {name: string, color: string}) => {
-    fetch(`${api}/category`, {
+  export const deleteInvest = (invest: {goal: number, percentage: number, date: Date, value: number}) => {
+    fetch(`${api}/invest`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
+      body: JSON.stringify({ goal: invest.goal, percentage: invest.percentage, date: invest.date, value: invest.value })
     })
     .then(response => {
         if (!response.ok) {
