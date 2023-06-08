@@ -1,8 +1,9 @@
 import api from "../config/api";
+import { accountTypes } from "../utils/types";
 
   
-  export const listCategory = () => {
-    fetch(`${api}/category`)
+  export const listUser = () => {
+    fetch(`${api}/user`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Sem resposta');
@@ -17,8 +18,8 @@ import api from "../config/api";
     });
   }
 
-  export const getCategoryById = (categoryId: number) => {
-    fetch(`${api}/category/${categoryId}`)
+  export const getUserById = (userId: number) => {
+    fetch(`${api}/user/${userId}`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Sem resposta');
@@ -33,13 +34,13 @@ import api from "../config/api";
     });
   }
 
-  export const createCategory = (category: {name: string, color: string}) => {
-    fetch(`${api}/category`, {
+  export const createUser = (user: {name: string, email: string, password: string}) => {
+    fetch(`${api}/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
+      body: JSON.stringify({ name: user.name, email: user.email , password: user.password})
     })
     .then(response => {
         if (!response.ok) {
@@ -55,13 +56,13 @@ import api from "../config/api";
     });
   }
 
-  export const updateCategory = (category: {id: number, name: string, color: string}) => {
-    fetch(`${api}/category/${category.id}`, {
+  export const uppasswordUser = (user: {name: string, email: string, password: string}) => {
+    fetch(`${api}/user`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
+      body: JSON.stringify({ name: user.name, email: user.email, password: user.password })
     })
     .then(response => {
         if (!response.ok) {
@@ -77,12 +78,13 @@ import api from "../config/api";
     });
   }
 
-  export const deleteCategory = (id: number) => {
-    fetch(`${api}/category/${id}`, {
+  export const deleteUser = (user: {name: string, email: string, password: string}) => {
+    fetch(`${api}/user`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
+      body: JSON.stringify({ name: user.name, email: user.email, password: user.password })
     })
     .then(response => {
         if (!response.ok) {

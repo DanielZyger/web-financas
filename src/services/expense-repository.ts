@@ -1,8 +1,45 @@
 import api from "../config/api";
+import { accountTypes } from "../utils/types";
 
-  
-  export const listCategory = () => {
-    fetch(`${api}/category`)
+type Increases = {
+    description: string;
+    date: Date;
+    value: number;
+}
+
+export const listIncrease = async () => {
+ try {
+    const response = await fetch(`${api}/increase`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('GET request failed');
+    }
+
+    const increase: Increases[] = await response.json();
+    console.log('GET request succeeded');
+    console.log('increase:', increase);
+
+    return increase;
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
+  }
+}
+
+type Expenses = {
+    description: string;
+    date: Date;
+    value: number;
+}
+
+
+  export const listExpense = () => {
+    fetch(`${api}/expense`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Sem resposta');
@@ -17,8 +54,8 @@ import api from "../config/api";
     });
   }
 
-  export const getCategoryById = (categoryId: number) => {
-    fetch(`${api}/category/${categoryId}`)
+  export const getExpenseById = (expenseId: number) => {
+    fetch(`${api}/expense/${expenseId}`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Sem resposta');
@@ -33,13 +70,13 @@ import api from "../config/api";
     });
   }
 
-  export const createCategory = (category: {name: string, color: string}) => {
-    fetch(`${api}/category`, {
+  export const createExpense = (expense: {date: Date, value: number}) => {
+    fetch(`${api}/expense`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
+      body: JSON.stringify({  date: expense.date, value: expense.value})
     })
     .then(response => {
         if (!response.ok) {
@@ -55,13 +92,13 @@ import api from "../config/api";
     });
   }
 
-  export const updateCategory = (category: {id: number, name: string, color: string}) => {
-    fetch(`${api}/category/${category.id}`, {
+  export const updateExpense = (expense: {date: Date, value: number}) => {
+    fetch(`${api}/expense`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name: category.name, color: category.color })
+      body: JSON.stringify({ date: expense.date, value: expense.value })
     })
     .then(response => {
         if (!response.ok) {
@@ -77,12 +114,13 @@ import api from "../config/api";
     });
   }
 
-  export const deleteCategory = (id: number) => {
-    fetch(`${api}/category/${id}`, {
+  export const deleteExpense = (expense: {date: Date, value: number}) => {
+    fetch(`${api}/expense`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
+      body: JSON.stringify({ date: expense.date, value: expense.value })
     })
     .then(response => {
         if (!response.ok) {
