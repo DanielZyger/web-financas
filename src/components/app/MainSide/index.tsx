@@ -20,8 +20,10 @@ import { changeMonth } from "../../../store/modules/Dates";
 // import { isSameMonth } from "date-fns";
 import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import { listIncrease } from "../../../services/increase-repository";
-import { isEmpty, sumBy } from "lodash";
-import { Expenses, Increases } from "../../../types/increase";
+import { sumBy } from "lodash";
+import { Expenses, Increases, Invests } from "../../../types/increase";
+import { listExpense } from "../../../services/expense-repository";
+import { listInvest } from "../../../services/invest-repository";
 
 // const schema = yup.object({
 //   name: yup
@@ -67,6 +69,7 @@ const MainSide = () => {
 
   const [increases, setIncreases] = useState<Increases[]>([]);
   const [expenses, setExpenses] = useState<Expenses[]>([]);
+  const [invest, setInvest] = useState<Invests[]>([]);
 
 
   const [censored, setCensored] = useState(false);
@@ -102,9 +105,14 @@ const MainSide = () => {
       setIncreases(list);
     }
     const listExpenses = async () => {
-      const list = await listExpenses()
-      setIncreases(list);
+      const list = await listExpense()
+      setExpenses(list);
     }
+    const listInvests = async () => {
+      const list = await listInvest()
+      setInvest(list);
+    }
+    listInvests();
     listExpenses();
     listIncreases();
   }, []);
@@ -116,6 +124,15 @@ const MainSide = () => {
   const totalValueExpenses = useMemo(() => {
     return sumBy(expenses, 'value')
   }, [expenses]);
+
+  const totalValueInvest = useMemo(() => {
+    return sumBy(invest, 'value')
+  }, [invest]);
+  
+
+  const currentBalance = useMemo(() => {
+    return totalValueIncreases - totalValueExpenses
+  }, [totalValueExpenses, totalValueIncreases]);
 
   return (
     <>
@@ -147,21 +164,21 @@ const MainSide = () => {
                 <S.Value textColor={MAIN_TEXT}>***********</S.Value>
               ) : (
                 <S.Value textColor={MAIN_TEXT}>
-                  R${formatNumberFractionalDigits(totalValueIncreases)}
+                  R${formatNumberFractionalDigits(currentBalance)}
                 </S.Value>
               )}
             </S.Balance>
             <S.Balance>
-              <S.Title textColor={BLUE_PRIMARY} opacity={0.5}>
-                Saldo previsto
+              <S.Title textColor={BLUE_PRIMARY}>
+                Saldo investido
               </S.Title>
               {censored ? (
                 <S.Value textColor={MAIN_TEXT} opacity={0.5}>
                   ***********
                 </S.Value>
               ) : (
-                <S.Value textColor={MAIN_TEXT} opacity={0.5}>
-                  {formatNumberFractionalDigits(2000)}
+                <S.Value textColor={MAIN_TEXT}>
+                  R$ {formatNumberFractionalDigits(totalValueInvest)}
                 </S.Value>
               )}
             </S.Balance>
@@ -171,7 +188,7 @@ const MainSide = () => {
             <S.Balance>
               <S.Title textColor={GREEN_PRIMARY}>Receitas</S.Title>
               {censored ? (
-                <S.Value textColor={GREEN_PRIMARY}>***********</S.Value>
+                <S.Value textColor={GREEN_PRIMARY} opacity={0.5}>***********</S.Value>
               ) : (
                 <S.Value textColor={GREEN_PRIMARY}>
                   R${formatNumberFractionalDigits(totalValueIncreases)}

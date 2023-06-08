@@ -23,7 +23,7 @@ interface RemindViewProps {
 }
 
 interface ItemProps extends IIncomes, IExpanses {
-  type: "EXPANSE" | "INCOME";
+  type: "EXPANSE" | "increaase";
 }
 
 interface RemindItemProps {

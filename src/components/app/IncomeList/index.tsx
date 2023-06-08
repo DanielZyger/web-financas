@@ -24,6 +24,8 @@ import { IncomeCategories } from "../../../utils/types";
 import { IncomeFormData } from "../../../utils/formDatas";
 import Loader from "../../utils/Loader";
 import { getCurrentIteration } from "../../../utils/getCurrentIteration";
+import { listIncrease } from "../../../services/increase-repository";
+import { Increases } from "../../../types/increase";
 
 const schema = yup.object({
   name: yup
@@ -42,8 +44,8 @@ const IncomeList = () => {
     (state: State) => state.incomes
   );
   const { selectedMonth } = useSelector((state: State) => state.dates);
-  const [incomesListState, setIncomesListState] = useState<
-    { day: number; items: any[] }[]
+  const [incomesList, setIncomesList] = useState<
+    Increases[]
   >([]);
 
   const [censored, setCensored] = useState(false);
@@ -197,9 +199,12 @@ const IncomeList = () => {
   }, []);
 
   useEffect(() => {
-    const incomesList = listByDate(incomes, incomesOnAccount, selectedMonth);
-    setIncomesListState(incomesList);
-  }, [incomes, incomesOnAccount, selectedMonth]);
+    const incomesList = async () => {
+      const list = await listIncrease()
+      setIncomesList(list);
+    } 
+    incomesList()
+  }, []);
 
   return (
     <>
@@ -235,53 +240,20 @@ const IncomeList = () => {
           </S.CensoredContainer>
         ) : (
           <S.ItemsList ref={listRef}>
-            {loading ? (
-              <Loader
-                height="150px"
-                width="360.63px"
-                color="#D4E3F5"
-                rectLength={3}
-                rectProps={{
-                  height: "32",
-                  rx: "20",
-                  ry: "20",
-                  y: "20",
-                  x: "0",
-                  width: "360",
-                }}
-              />
-            ) : (
-              incomesListState.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <S.DateText color={textColor}>
-                      {item.day} de {getMonthName(selectedMonth)}
-                    </S.DateText>
-                    {item?.items?.map((i: Income, index: number) => {
-                      return (
-                        <ItemView
-                          key={index}
-                          type={"INCOME"}
-                          item={i}
-                          switchValue={!!i.paymentDate}
-                          onEdit={() => handleOpenEditModal(i)}
-                          onDelete={() => handleOpenDeleteModal(i)}
-                          onChangeSwitch={() => {
-                            if (!i?.paymentDate) {
-                              handleOpenConfirmReceiveModal(i);
-                            } else {
-                              handleOpenConfirmUnreceiveModal(i);
-                            }
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                );
-              })
-            )}
-
-            {!loading && incomesListState.length === 0 && (
+            {incomesList.map((item, index) => {
+              return (
+                <div key={index}>
+                    <ItemView
+                      item={item}
+                      // onEdit={handleOpenEditModal}
+                      // onDelete={handleOpenDeleteModal}
+                      type="increase"
+                    />
+                </div>
+              );
+            })
+        }
+            {incomesList.length === 0 && (
               <S.Empty>
                 <FaBan />
                 <p>Nenhuma entrada nesse mês</p>

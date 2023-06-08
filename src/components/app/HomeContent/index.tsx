@@ -17,7 +17,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface ItemProps extends IIncomes, IExpanses {
-  type: "EXPANSE" | "INCOME";
+  type: "EXPANSE" | "increaase";
 }
 
 interface RemindItemProps {

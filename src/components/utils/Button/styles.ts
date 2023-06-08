@@ -17,6 +17,7 @@ interface TextColor {
 
 export const Container = styled(animated.button)`
   height: 3.5rem;
+  margin-bottom: 10px;
   width: 100%;
   display: flex;
 `;

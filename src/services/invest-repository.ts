@@ -1,22 +1,27 @@
 import api from "../config/api";
-import { accountTypes } from "../utils/types";
+import { Invests } from "../types/increase";
 
-  
-  export const listInvest = () => {
-    fetch(`${api}/invest`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Sem resposta');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }
+export const listInvest = async () => {
+  try {
+     const response = await fetch(`${api}/invest`, {
+       method: 'GET',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+     });
+ 
+     if (!response.ok) {
+       throw new Error('GET falhou');
+     }
+     const invest: Invests[] = await response.json();
+     console.log('invest:', invest);
+ 
+     return invest;
+   } catch (error) {
+     console.error('Error:', error);
+     return [];
+   }
+ }
 
   export const getInvestById = (investId: number) => {
     fetch(`${api}/invest/${investId}`)

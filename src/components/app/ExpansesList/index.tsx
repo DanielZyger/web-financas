@@ -23,6 +23,8 @@ import Loader from "../../utils/Loader";
 import Modal from "../../utils/Modal";
 import CreateExpanse from "../CreateExpanse";
 import { getCurrentIteration } from "../../../utils/getCurrentIteration";
+import { listExpense } from "../../../services/expense-repository";
+import { Expenses } from "../../../types/increase";
 
 const schema = yup.object({
   name: yup
@@ -42,9 +44,7 @@ const ExpansesList = () => {
   );
   const { selectedMonth } = useSelector((state: State) => state.dates);
 
-  const [expansesListState, setExpansesListState] = useState<
-    { day: number; items: any[] }[]
-  >([]);
+  const [expenseList, setExpenseList] = useState<Expenses[]>([]);
   const [censored, setCensored] = useState(false);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [expanseSelected, setExpanseSelected] = useState<IExpanses | null>(
@@ -200,16 +200,12 @@ const ExpansesList = () => {
   }, []);
 
   useEffect(() => {
-    const expansesWithoutInvoice = expanses.filter((exp) =>
-      accounts.find((acc) => acc.id === exp.receiptDefault)
-    );
-    const expansesList = listByDate(
-      expansesWithoutInvoice,
-      expansesOnAccount,
-      selectedMonth
-    );
-    setExpansesListState(expansesList);
-  }, [accounts, expanses, expansesOnAccount, selectedMonth]);
+    const expenseList = async () => {
+      const list = await listExpense()
+      setExpenseList(list);
+    } 
+    expenseList()
+  }, []);
 
   return (
     <>
@@ -262,38 +258,25 @@ const ExpansesList = () => {
               />
             ) : (
               <>
-                {expansesListState.map((item, index) => {
+                {expenseList.map((item, index) => {
                   return (
                     <div key={index}>
-                      <S.DateText color={textColor}>
-                        {item.day} de {getMonthName(selectedMonth)}
-                      </S.DateText>
-                      {item?.items?.map((i: any, index: number) => {
                         return (
                           <ItemView
                             key={index}
-                            type={"EXPANSE"}
-                            item={i}
-                            switchValue={!!i.paymentDate}
-                            onEdit={() => handleOpenEditModal(i)}
-                            onDelete={() => handleOpenDeleteModal(i)}
-                            onChangeSwitch={() => {
-                              if (!i?.paymentDate) {
-                                handleOpenConfirmReceiveModal(i);
-                              } else {
-                                handleOpenConfirmUnreceiveModal(i);
-                              }
-                            }}
+                            type="expense"
+                            item={item}
+                            // onEdit={() => handleOpenEditModal(item)}
+                            // onDelete={() => handleOpenDeleteModal(item)}
                           />
                         );
-                      })}
                     </div>
                   );
                 })}
               </>
             )}
 
-            {!loading && expansesListState.length === 0 && (
+            {!loading && expenseList.length === 0 && (
               <S.Empty>
                 <FaBan />
                 <p>Nenhuma despesa nesse mês</p>

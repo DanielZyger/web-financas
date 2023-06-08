@@ -77,7 +77,7 @@ export const CensoredContainer = styled.div`
 `;
 
 interface ItemProps {
-  type: "EXPANSE" | "INCOME";
+  type: "EXPANSE" | "increaase";
 }
 
 export const Item = styled.div<ItemProps>`
