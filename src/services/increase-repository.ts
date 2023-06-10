@@ -1,5 +1,5 @@
 import api from "../config/api";
-import { Increases } from "../types/increase";
+import { Increases } from "../types";
 
 export const listIncrease = async () => {
  try {
@@ -40,7 +40,7 @@ export const getincreaseById = (id: number) => {
 }
 
 export const createIncrease = (increase: {
-    description: string, value: string, date: Date
+    description: string, value: number, date: Date
 }) => {
   fetch(`${api}/increase`, {
     method: 'POST',

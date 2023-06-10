@@ -24,7 +24,7 @@ import Modal from "../../utils/Modal";
 import CreateExpanse from "../CreateExpanse";
 import { getCurrentIteration } from "../../../utils/getCurrentIteration";
 import { listExpense } from "../../../services/expense-repository";
-import { Expenses } from "../../../types/increase";
+import { Expenses } from "../../../types";
 
 const schema = yup.object({
   name: yup
@@ -258,21 +258,7 @@ const ExpansesList = () => {
               />
             ) : (
               <>
-                {expenseList.map((item, index) => {
-                  return (
-                    <div key={index}>
-                        return (
-                          <ItemView
-                            key={index}
-                            type="expense"
-                            item={item}
-                            // onEdit={() => handleOpenEditModal(item)}
-                            // onDelete={() => handleOpenDeleteModal(item)}
-                          />
-                        );
-                    </div>
-                  );
-                })}
+                
               </>
             )}
 

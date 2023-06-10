@@ -6,7 +6,7 @@ import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import State from "../../../store/interfaces";
 import { useSelector } from "react-redux";
 import useCollapse from "react-collapsed";
-import { Expenses, Increases } from "../../../types/increase";
+import { Expenses, Increases } from "../../../types";
 import dayjs from "dayjs";
 
 interface ItemType extends Increases, Expenses {}
@@ -14,8 +14,8 @@ interface ItemType extends Increases, Expenses {}
 interface ItemViewProps {
   type: "expense" | "increase";
   item: ItemType;
-  onEdit?: () => void;
-  onDelete?: () => void;
+  onEdit: (item: ItemType) => void;
+  onDelete: (item: ItemType) => void;
 }
 
 export default function ItemView({
@@ -59,10 +59,10 @@ export default function ItemView({
 
       <S.Content {...getCollapseProps()}>
         <S.ButtonContainer>
-          <button onClick={onEdit}>
+          <button onClick={() => onEdit(item)}>
             <FaEdit color={mainColor} size={22} />
           </button>
-            <button onClick={onDelete}>
+            <button onClick={() => onDelete(item)}>
               <FaTrash color={redPrimary} size={22} />
             </button>
         </S.ButtonContainer>

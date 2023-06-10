@@ -1,5 +1,5 @@
 import api from "../config/api";
-import { Expenses } from "../types/increase";
+import { Expenses } from "../types";
 
 export const listExpense = async () => {
   try {

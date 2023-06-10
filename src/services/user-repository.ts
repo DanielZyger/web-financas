@@ -1,22 +1,28 @@
 import api from "../config/api";
-import { accountTypes } from "../utils/types";
+import { Users } from "../types";
 
   
-  export const listUser = () => {
-    fetch(`${api}/user`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Sem resposta');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }
+export const listUser = async () => {
+  try {
+     const response = await fetch(`${api}/user`, {
+       method: 'GET',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+     });
+ 
+     if (!response.ok) {
+       throw new Error('GET falhou');
+     }
+     const user: Users[] = await response.json();
+     console.log('user:', user);
+ 
+     return user;
+   } catch (error) {
+     console.error('Error:', error);
+     return [];
+   }
+ }
 
   export const getUserById = (userId: number) => {
     fetch(`${api}/user/${userId}`)

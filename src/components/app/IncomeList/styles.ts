@@ -7,6 +7,7 @@ interface TextProps {
 
 export const Container = styled.div`
   display: flex;
+  margin-top: 10px;
   flex-direction: column;
   width: 100%;
   max-width: 24.5rem;

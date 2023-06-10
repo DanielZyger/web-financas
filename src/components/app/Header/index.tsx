@@ -4,12 +4,35 @@ import LogoImg from "../../../assets/logo.svg";
 import DefaultAvatar from "../../../assets/icons/user.svg";
 import { Link } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { listUser } from "../../../services/user-repository";
+import { Users } from "../../../types";
 interface HeaderProps {
   expanded?: boolean;
 }
 
 const Header = ({ expanded = false }: HeaderProps) => {
   const backgroundColor = Colors.BLUE_PRIMARY_LIGHTER;
+  const [users, setUsers] = useState<Users[]>([])
+  const [userName, setUserName] = useState('')
+
+
+  useEffect(() => {
+    const userList = async () => {
+      const list = await listUser()
+      setUsers(list);
+    } 
+    userList()
+  }, []);
+
+  useEffect(() => {
+    if(users.length) {
+      setUserName(users[0].name);
+      return
+    }
+    setUserName('Usuário');
+  }, [users]);
+
 
   return (
     <S.Container backgroundColor={backgroundColor} expanded={expanded}>
@@ -20,7 +43,7 @@ const Header = ({ expanded = false }: HeaderProps) => {
       <S.UserContainer>
         <S.Welcome>
           <S.Text>Bem vindo,</S.Text>
-          <S.BoldText>{'Daniel Zyger dos Santos'}</S.BoldText>
+          <S.BoldText>{userName}</S.BoldText>
         </S.Welcome>
 
         <Link to="/profile">

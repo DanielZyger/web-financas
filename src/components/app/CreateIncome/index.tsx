@@ -2,7 +2,6 @@ import { Control, SubmitHandler, UseFormHandleSubmit } from "react-hook-form";
 import Button from "../../utils/Button";
 import Input from "../../utils/Input";
 import Select from "../../utils/Select";
-import Switch from "react-switch";
 import * as S from "./styles";
 import {
   GREEN_PRIMARY,
@@ -10,106 +9,63 @@ import {
   INCOME_INPUT,
   MAIN_TEXT,
 } from "../../../styles/global";
-import State, {
-  ICreateIncome,
-  ICreateIncomeOnAccount,
-  IUpdateIncome,
-} from "../../../store/interfaces";
-import {
-  currencyMask,
-  currencyToValue,
-} from "../../../utils/getCurrencyFormat";
-import { useSelector } from "react-redux";
-import { FaCheck, FaSave } from "react-icons/fa";
+import { FaSave } from "react-icons/fa";
 import { IncomeCategories } from "../../../utils/types";
-import { useEffect, useState } from "react";
-import SelectButton from "../../utils/SelectButton";
-import { format, isSameMonth, parse } from "date-fns";
+import { format } from "date-fns";
 import DatePicker from "../../utils/DatePicker";
-import { IncomeFormData } from "../../../utils/formDatas";
+import { Increases } from "../../../types";
+import { createIncrease } from "../../../services/increase-repository";
 
-interface CreateIncomeProps {
-  control: Control<IncomeFormData>;
-  handleSubmit: UseFormHandleSubmit<IncomeFormData>;
-  incomeId?: string;
+interface CreateIncrease {
+  control: Control<Increases>;
+  handleSubmit: UseFormHandleSubmit<Increases>;
+  increaseId?: number;
   onFinish: () => void;
-  recurrence: "Mensal" | "Parcelada";
 }
 
 export default function CreateIncome({
   control,
-  incomeId,
-  recurrence,
+  increaseId,
   onFinish,
   handleSubmit,
-}: CreateIncomeProps) {
-  const { selectedMonth } = useSelector((state: State) => state.dates);
-  const { accounts } = useSelector((state: State) => state.accounts);
-  const { incomeCreated } = useSelector((state: State) => state.incomes);
-  const { theme } = useSelector((state: State) => state.themes);
+}: CreateIncrease) {
 
-  const [recurrenceState, setRecurrenceState] = useState<
-    "Mensal" | "Parcelada"
-  >(recurrence);
-  const [received, setReceived] = useState(false);
+  const onSubmit: SubmitHandler<Increases> = async (data) => {
+    console.log('o que tentou criar', data);
+    createIncrease({
+      description: data.description,
+      value: data.value,
+      date: data.date
+    })
 
-  const onSubmit: SubmitHandler<IncomeFormData> = async (data) => {
-    const startDateParsed = parse(data.startDate, "yyyy-MM-dd", new Date());
-    if (!!incomeId) {
-      const incomeToUpdate: IUpdateIncome = {
-        ...data,
-        value:
-          data.value && data.value.startsWith("R$")
-            ? Number(currencyToValue(data.value))
-            : Number(data.value),
-        receiptDate: startDateParsed,
-        startDate: startDateParsed,
-      };
-      console.log('incomeToUpdate', incomeToUpdate)
-      // dispatch(updateIncome(incomeToUpdate, incomeId));
+    if (!!increaseId) {
+      // const incomeToUpdate: IUpdateIncome = {
+      //   ...data,
+      //   value:
+      //     data.value && data.value.startsWith("R$")
+      //       ? Number(currencyToValue(data.value))
+      //       : Number(data.value),
+      //   receiptDate: startDateParsed,
+      //   startDate: startDateParsed,
+      // };
+      // console.log('incomeToUpdate', incomeToUpdate)
+      // // dispatch(updateIncome(incomeToUpdate, increaseId));
       onFinish();
       return;
     }
-    const incomeToCreate: ICreateIncome = {
-      ...data,
-      value:
-        data.value && data.value !== "0"
-          ? Number(currencyToValue(data.value))
-          : 0,
-      receiptDate: startDateParsed,
-      startDate: startDateParsed,
-    };
-    console.log(incomeToCreate)
+    // const incomeToCreate: ICreateIncome = {
+    //   ...data,
+    //   value:
+    //     data.value && data.value !== "0"
+    //       ? Number(currencyToValue(data.value))
+    //       : 0,
+    //   receiptDate: startDateParsed,
+    //   startDate: startDateParsed,
+    // };
+    // console.log(incomeToCreate)
 
     onFinish();
   };
-
-  useEffect(() => {
-    setRecurrenceState(recurrence);
-  }, [recurrence]);
-
-  useEffect(() => {
-    if (received && incomeCreated) {
-      const findAccount = accounts.find(
-        (acc) => acc.id === incomeCreated.receiptDefault
-      );
-
-      const incomeOnAccountToCreate: ICreateIncomeOnAccount = {
-        userId: 'aff',
-        accountId: incomeCreated.receiptDefault,
-        incomeId: incomeCreated.id,
-        month: new Date(),
-        value: incomeCreated.value,
-        name: incomeCreated.name,
-        recurrence: incomeCreated.iteration,
-      };
-      console.log(incomeOnAccountToCreate)
-      if (findAccount) {
-        
-        setReceived(false);
-      }
-    }
-  }, [incomeCreated, accounts, received]);
 
   return (
     <>
@@ -119,7 +75,7 @@ export default function CreateIncome({
             label="Nome"
             backgroundColor={INCOME_INPUT}
             textColor={MAIN_TEXT}
-            name="name"
+            name="description"
             defaultValue={""}
             control={control}
           />
@@ -129,63 +85,19 @@ export default function CreateIncome({
             backgroundColor={INCOME_INPUT}
             textColor={MAIN_TEXT}
             name="value"
-            mask={currencyMask}
             defaultValue={"0"}
             control={control}
           />
-
-          <S.Col>
-            <S.Label color="#000">Recorrência</S.Label>
-            <S.Row>
-              <SelectButton
-                type="button"
-                backgroundColor={INCOME_INPUT}
-                textColor={MAIN_TEXT}
-                icon={() => <FaCheck color="#FFF" size={25} />}
-                title="Mensal"
-                checked={recurrenceState === "Mensal"}
-                onClick={() => setRecurrenceState("Mensal")}
-              />
-            </S.Row>
-          </S.Col>
-
           <S.Row>
             <S.Col>
               <DatePicker
                 label="Data de recebimento"
                 backgroundColor={INCOME_INPUT}
                 textColor={MAIN_TEXT}
-                name="startDate"
+                name="date"
                 defaultValue={format(new Date(), "yyyy-MM-dd")}
                 control={control}
               />
-            </S.Col>
-
-            <S.Col style={{ alignItems: "flex-end" }}>
-              {isSameMonth(new Date(), selectedMonth) && !incomeId && (
-                <>
-                  <S.Label
-                    color="#000"
-                    style={{ width: "100%", textAlign: "right" }}
-                  >
-                    Recebido
-                  </S.Label>
-
-                  <Switch
-                    checked={received}
-                    onChange={() => setReceived(!received)}
-                    checkedIcon={false}
-                    uncheckedIcon={false}
-                    offColor={theme === "dark" ? "#262626" : "#d2d2d2"}
-                    onColor="#76B4B8"
-                    onHandleColor="#1A8289"
-                    offHandleColor="#76B4B8"
-                    height={13}
-                    width={31}
-                    handleDiameter={20}
-                  />
-                </>
-              )}
             </S.Col>
           </S.Row>
           <Select

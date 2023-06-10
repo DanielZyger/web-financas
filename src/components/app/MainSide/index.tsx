@@ -21,7 +21,7 @@ import { changeMonth } from "../../../store/modules/Dates";
 import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import { listIncrease } from "../../../services/increase-repository";
 import { sumBy } from "lodash";
-import { Expenses, Increases, Invests } from "../../../types/increase";
+import { Expenses, Increases, Invests } from "../../../types";
 import { listExpense } from "../../../services/expense-repository";
 import { listInvest } from "../../../services/invest-repository";
 
@@ -70,6 +70,7 @@ const MainSide = () => {
   const [increases, setIncreases] = useState<Increases[]>([]);
   const [expenses, setExpenses] = useState<Expenses[]>([]);
   const [invest, setInvest] = useState<Invests[]>([]);
+  const [saldoIncrease, setSaldoIncrease] = useState(0)
 
 
   const [censored, setCensored] = useState(false);
@@ -128,7 +129,10 @@ const MainSide = () => {
   const totalValueInvest = useMemo(() => {
     return sumBy(invest, 'value')
   }, [invest]);
-  
+
+  useEffect(() => {
+    setSaldoIncrease(totalValueIncreases)
+  }, [increases, totalValueIncreases, expenses, invest])
 
   const currentBalance = useMemo(() => {
     return totalValueIncreases - totalValueExpenses
@@ -191,7 +195,7 @@ const MainSide = () => {
                 <S.Value textColor={GREEN_PRIMARY} opacity={0.5}>***********</S.Value>
               ) : (
                 <S.Value textColor={GREEN_PRIMARY}>
-                  R${formatNumberFractionalDigits(totalValueIncreases)}
+                  R${formatNumberFractionalDigits(saldoIncrease)}
                 </S.Value>
               )}
             </S.Balance>
