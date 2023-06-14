@@ -10,11 +10,12 @@ import {
   MAIN_TEXT,
 } from "../../../styles/global";
 import { FaSave } from "react-icons/fa";
-import { IncomeCategories } from "../../../utils/types";
 import { format } from "date-fns";
 import DatePicker from "../../utils/DatePicker";
-import { Increases } from "../../../types";
-import { createIncrease } from "../../../services/increase-repository";
+import { Categories, Increases } from "../../../types";
+import { createIncrease, updateIncrease } from "../../../services/increase-repository";
+import { listCategory } from "../../../services/category-repository";
+import { useEffect, useState } from "react";
 
 interface CreateIncrease {
   control: Control<Increases>;
@@ -29,43 +30,45 @@ export default function CreateIncome({
   onFinish,
   handleSubmit,
 }: CreateIncrease) {
+  const [categoriesList, setCategoriesList] = useState<Categories[]>([])
+  const [firstCategory, setFirstCategory] = useState('')
 
   const onSubmit: SubmitHandler<Increases> = async (data) => {
-    console.log('o que tentou criar', data);
-    createIncrease({
+    if (increaseId) {
+      await updateIncrease({
+        id: increaseId,
+        description: data.description,
+        value: data.value,
+        date: data.date
+      });
+      onFinish();
+      // eslint-disable-next-line no-restricted-globals
+      location.reload();
+      return;
+    }
+
+    await createIncrease({
       description: data.description,
       value: data.value,
       date: data.date
     })
-
-    if (!!increaseId) {
-      // const incomeToUpdate: IUpdateIncome = {
-      //   ...data,
-      //   value:
-      //     data.value && data.value.startsWith("R$")
-      //       ? Number(currencyToValue(data.value))
-      //       : Number(data.value),
-      //   receiptDate: startDateParsed,
-      //   startDate: startDateParsed,
-      // };
-      // console.log('incomeToUpdate', incomeToUpdate)
-      // // dispatch(updateIncome(incomeToUpdate, increaseId));
-      onFinish();
-      return;
-    }
-    // const incomeToCreate: ICreateIncome = {
-    //   ...data,
-    //   value:
-    //     data.value && data.value !== "0"
-    //       ? Number(currencyToValue(data.value))
-    //       : 0,
-    //   receiptDate: startDateParsed,
-    //   startDate: startDateParsed,
-    // };
-    // console.log(incomeToCreate)
-
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
     onFinish();
   };
+
+  useEffect(() => {
+    const categoriesList = async () => {
+      const list = await listCategory()
+      setCategoriesList(list);
+    } 
+    categoriesList()
+  }, []);
+
+  useEffect(() => {
+    if(!categoriesList[0]) return;
+    setFirstCategory(categoriesList[0].name)
+  }, [categoriesList])
 
   return (
     <>
@@ -106,8 +109,8 @@ export default function CreateIncome({
             textColor={MAIN_TEXT}
             name="category"
             control={control}
-            options={IncomeCategories}
-            defaultValue={IncomeCategories[0].name}
+            options={categoriesList}
+            defaultValue={firstCategory}
           />
 
           <S.ButtonContainer>

@@ -83,19 +83,18 @@ export const listInvest = async () => {
     });
   }
 
-  export const deleteInvest = (invest: {goal: number, percentage: number, date: Date, value: number}) => {
-    fetch(`${api}/invest`, {
+  export const deleteInvest = (investId: number) => {
+    fetch(`${api}/invest/${investId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ goal: invest.goal, percentage: invest.percentage, date: invest.date, value: invest.value })
     })
     .then(response => {
         if (!response.ok) {
           throw new Error('Sem resposta');
         }
-        return response.json();
+        console.log('Excluído com sucesso')
     })
     .then(data => {
         console.log(data);

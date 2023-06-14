@@ -2,9 +2,7 @@ import ExpansesList from "../ExpansesList";
 
 const ExpansesView = () => {
   return (
-    <>
       <ExpansesList />
-    </>
   );
 };
 

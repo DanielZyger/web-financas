@@ -39,13 +39,13 @@ export const listExpense = async () => {
     });
   }
 
-  export const createExpense = (expense: {date: Date, value: number}) => {
+  export const createExpense = (expense: {description: string, date: Date, value: number, category_id: number}) => {
     fetch(`${api}/expense`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({  date: expense.date, value: expense.value})
+      body: JSON.stringify({ description: expense.description, date: expense.date, value: expense.value, category_id: expense.category_id})
     })
     .then(response => {
         if (!response.ok) {
@@ -61,13 +61,13 @@ export const listExpense = async () => {
     });
   }
 
-  export const updateExpense = (expense: {date: Date, value: number}) => {
-    fetch(`${api}/expense`, {
+  export const updateExpense = (expense: {id: number, description: string, date: Date, value: number, category_id: number}) => {
+    fetch(`${api}/expense/${expense.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ date: expense.date, value: expense.value })
+      body: JSON.stringify({ description: expense.description, date: expense.date, value: expense.value, category_id: expense.category_id })
     })
     .then(response => {
         if (!response.ok) {
@@ -83,19 +83,18 @@ export const listExpense = async () => {
     });
   }
 
-  export const deleteExpense = (expense: {date: Date, value: number}) => {
-    fetch(`${api}/expense`, {
+  export const deleteExpense = (expenseId: number) => {
+    fetch(`${api}/expense/${expenseId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ date: expense.date, value: expense.value })
     })
     .then(response => {
         if (!response.ok) {
           throw new Error('Sem resposta');
         }
-        return response.json();
+        console.log('Excluído com sucesso')
     })
     .then(data => {
         console.log(data);

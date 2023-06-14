@@ -5,7 +5,7 @@ import theme from "styled-theming";
 import * as S from "./styles";
 
 interface OptionsProps {
-  id?: string;
+  id?: number;
   name: string;
   icon?: string;
   limit?: number;
@@ -70,7 +70,7 @@ export default function Select({
             >
               {options.map(({ icon, name, id, limit }) => (
                 <option
-                  value={optionValueType === "name" ? name : id}
+                  value={optionValueType === "name" ? id : name}
                   key={Math.random()}
                 >
                   {icon} {name} {limit && "(Cartão de crédito)"}

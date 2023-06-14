@@ -11,24 +11,26 @@ import CreateIncome from "../CreateIncome";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { listIncrease } from "../../../services/increase-repository";
-import { Increases } from "../../../types";
+import { deleteIncrease, listIncrease } from "../../../services/increase-repository";
+import { Categories, Increases } from "../../../types";
+import { listCategory } from "../../../services/category-repository";
 
 const schema = yup.object({
-  name: yup
+  description: yup
     .string()
     .required("Campo obrigátorio")
     .min(2, "deve ter no mínimo 2 caracteres")
     .max(25, "deve ter no máximo 25 caracteres"),
 });
 
-// interface Increase extends Increases {}
 
 const IncomeList = () => {
   const { theme } = useSelector((state: State) => state.themes);
-  const { selectedMonth } = useSelector((state: State) => state.dates);
   const [incomesList, setIncomesList] = useState<
     Increases[]
+  >([]);
+  const [categoryList, setCategoryList] = useState<
+    Categories[]
   >([]);
 
   const [censored, setCensored] = useState(false);
@@ -57,7 +59,7 @@ const IncomeList = () => {
     setModalVisibility(true);
     setValue("description", increase.description);
     setValue("value", increase.value);
-    setValue("date", increase.date);
+    setValue("date", new Date(increase.date));
     setIncreaseSelected(increase ? increase : increase);
   };
 
@@ -66,11 +68,14 @@ const IncomeList = () => {
     setDeleteConfirmationVisible(true);
   };
 
-  const handleDelete = () => {
-    if (increaseSelected) {
-      setDeleteConfirmationVisible(false);
-      setIncreaseSelected(null);
-    }
+  const handleDelete = async () => {
+    if(!increaseSelected) return;
+    await deleteIncrease(increaseSelected.id)
+    handleCloseModal()
+    setModalVisibility(false)
+    setDeleteConfirmationVisible(false)
+    // eslint-disable-next-line no-restricted-globals
+    location.reload()
   };
 
   const handleToggleCensored = () => {
@@ -93,6 +98,11 @@ const IncomeList = () => {
       const list = await listIncrease()
       setIncomesList(list);
     } 
+    const categoryList = async () => {
+      const list = await listCategory()
+      setCategoryList(list);
+    } 
+    categoryList()
     incomesList()
   }, []);
 
@@ -134,6 +144,7 @@ const IncomeList = () => {
               return (
                 <div key={index}>
                     <ItemView
+                      categories={categoryList}
                       item={item}
                       onEdit={(item) => handleOpenEditModal(item)}
                       onDelete={(item) => handleOpenDeleteModal(item)}

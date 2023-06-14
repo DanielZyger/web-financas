@@ -68,7 +68,7 @@ export const createIncrease = (increase: {
   });
 }
 
-export const updateIncrease = (increase: {id: number, description: string, value: string, date: Date}) => {
+export const updateIncrease = (increase: {id: number, description: string, value: number, date: Date}) => {
   fetch(`${api}/increase/${increase.id}`, {
     method: 'PUT',
     headers: {
@@ -90,8 +90,8 @@ export const updateIncrease = (increase: {id: number, description: string, value
   });
 }
 
-export const deleteIncrease = () => {
-  fetch(`${api}/increase`, {
+export const deleteIncrease = (increaseId: number) => {
+  fetch(`${api}/increase/${increaseId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ export const deleteIncrease = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      return response.json();
+      console.log('Excluído com sucesso')
   })
   .then(data => {
       console.log(data);

@@ -6,21 +6,24 @@ import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import State from "../../../store/interfaces";
 import { useSelector } from "react-redux";
 import useCollapse from "react-collapsed";
-import { Expenses, Increases } from "../../../types";
+import { Categories, Expenses, Increases } from "../../../types";
 import dayjs from "dayjs";
+import { FaCircle } from "react-icons/fa";
 
 interface ItemType extends Increases, Expenses {}
 
 interface ItemViewProps {
-  type: "expense" | "increase";
+  type: "expense" | "increase" | "invest";
   item: ItemType;
   onEdit: (item: ItemType) => void;
+  categories: Categories[];
   onDelete: (item: ItemType) => void;
 }
 
 export default function ItemView({
   type,
   item,
+  categories,
   onDelete,
   onEdit,
 }: ItemViewProps) {
@@ -45,6 +48,8 @@ export default function ItemView({
     return dayjs(item.date).format('DD/MM/YYYY')
   }, [item]);
 
+  const getCategory = categories.find((category) => category.id === item.category_id)
+
   return (
     <S.Collapse
       backgroundColor={backgroundColor}
@@ -52,6 +57,7 @@ export default function ItemView({
       style={{ opacity: 0.8 }}
     >
       <S.CollapseContent mainColor={mainColor} {...getToggleProps()}>
+        <FaCircle color={getCategory?.color} />
         <p>{item.description}</p>
         <p>R$ {formatNumberFractionalDigits(item.value)}</p>
         <p>{date}</p>

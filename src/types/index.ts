@@ -3,10 +3,18 @@ export type Increases = {
     description: string;
     date: Date;
     value: number;
+    category_id: number;
+}
+
+export type Categories = {
+    id: number;
+    name: string;
+    color: string;
 }
 
 export type Expenses = {
     id: number;
+    category_id: number;
     description: string;
     date: Date;
     value: number;

@@ -1,21 +1,28 @@
 import api from "../config/api";
+import { Categories } from "../types";
 
   
-  export const listCategory = () => {
-    fetch(`${api}/category`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Sem resposta');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }
+export const listCategory = async () => {
+  try {
+     const response = await fetch(`${api}/category`, {
+       method: 'GET',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+     });
+ 
+     if (!response.ok) {
+       throw new Error('GET falhou');
+     }
+     const category: Categories[] = await response.json();
+     console.log('category:', category);
+ 
+     return category;
+   } catch (error) {
+     console.error('Error:', error);
+     return [];
+   }
+ }
 
   export const getCategoryById = (categoryId: number) => {
     fetch(`${api}/category/${categoryId}`)

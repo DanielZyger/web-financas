@@ -55,23 +55,11 @@ import { listInvest } from "../../../services/invest-repository";
 
 const MainSide = () => {
   const dispatch = useDispatch<any>();
-  // const {
-  //   incomes,
-  //   incomesOnAccount,
-  //   loading: incomesLoading,
-  // } = useSelector((state: State) => state.incomes);
-  // const {
-  //   expanses,
-  //   expansesOnAccount,
-  //   loading: expansesLoading,
-  // } = useSelector((state: State) => state.expanses);
   const { selectedMonth } = useSelector((state: State) => state.dates);
 
   const [increases, setIncreases] = useState<Increases[]>([]);
   const [expenses, setExpenses] = useState<Expenses[]>([]);
   const [invest, setInvest] = useState<Invests[]>([]);
-  const [saldoIncrease, setSaldoIncrease] = useState(0)
-
 
   const [censored, setCensored] = useState(false);
 
@@ -92,13 +80,6 @@ const MainSide = () => {
     );
     dispatch(changeMonth(newDate.toISOString()));
   };
-
-  // const calculateBalance = useCallback(
-  //   (isTheSameMonth: boolean) => {
-  //     let sumTotalCurrentBalance = 0;
-  //     let sumTotalEstimateBalance = 0;
-  //     const accountsBalances: AccountBalance[] = [];
-  //   },[])
   
   useEffect(() => {
     const listIncreases = async () => {
@@ -129,10 +110,6 @@ const MainSide = () => {
   const totalValueInvest = useMemo(() => {
     return sumBy(invest, 'value')
   }, [invest]);
-
-  useEffect(() => {
-    setSaldoIncrease(totalValueIncreases)
-  }, [increases, totalValueIncreases, expenses, invest])
 
   const currentBalance = useMemo(() => {
     return totalValueIncreases - totalValueExpenses
@@ -195,7 +172,7 @@ const MainSide = () => {
                 <S.Value textColor={GREEN_PRIMARY} opacity={0.5}>***********</S.Value>
               ) : (
                 <S.Value textColor={GREEN_PRIMARY}>
-                  R${formatNumberFractionalDigits(saldoIncrease)}
+                  R${formatNumberFractionalDigits(totalValueIncreases)}
                 </S.Value>
               )}
             </S.Balance>
