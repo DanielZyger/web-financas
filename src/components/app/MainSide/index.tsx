@@ -15,55 +15,21 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import State from "../../../store/interfaces";
-// import * as yup from "yup";
 import { changeMonth } from "../../../store/modules/Dates";
-// import { isSameMonth } from "date-fns";
 import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import { listIncrease } from "../../../services/increase-repository";
 import { sumBy } from "lodash";
-import { Expenses, Increases, Invests } from "../../../types";
+import { Expenses, Increases, Invests } from "../../../store/types";
 import { listExpense } from "../../../services/expense-repository";
 import { listInvest } from "../../../services/invest-repository";
-
-// const schema = yup.object({
-//   name: yup
-//     .string()
-//     .required("Campo obrigátorio")
-//     .min(2, "deve ter no mínimo 2 caracteres")
-//     .max(25, "deve ter no máximo 25 caracteres"),
-//   type: yup.string().required("Campo obrigátorio"),
-// });
-
-// type FormData = {
-//   name: string;
-//   type: string;
-//   status: string;
-//   initialValue?: string;
-// };
-
-// type AccountBalance = {
-//   accountId: string;
-//   currentBalance: number;
-//   estimateBalance: number;
-// };
-
-// type Balance = {
-//   accountId: string;
-//   currentBalance: number;
-//   estimateBalance: number;
-// };
 
 const MainSide = () => {
   const dispatch = useDispatch<any>();
   const { selectedMonth } = useSelector((state: State) => state.dates);
-
   const [increases, setIncreases] = useState<Increases[]>([]);
   const [expenses, setExpenses] = useState<Expenses[]>([]);
   const [invest, setInvest] = useState<Invests[]>([]);
-
   const [censored, setCensored] = useState(false);
-
-  // const [balances, setBalances] = useState<Balance[]>([]);
 
   const handleToggleCensored = () => {
     setCensored(!censored);

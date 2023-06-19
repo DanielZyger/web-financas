@@ -1,39 +1,62 @@
 import { useEffect, useState } from "react";
 import * as S from "./styles";
-
 import { GREEN_PRIMARY, RED_PRIMARY } from "../../../styles/global";
 import { FaBan, FaEye, FaEyeSlash } from "react-icons/fa";
-import { getCategoryIcon } from "../../../utils/getCategoryIcon";
 import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
-
-import { getDayOfTheMounth } from "../../../utils/dateFormats";
 import { useSelector } from "react-redux";
+import { Expenses, Increases, Transactions } from "../../../store/types";
+import { listExpense } from "../../../services/expense-repository";
+import { listIncrease } from "../../../services/increase-repository";
 import State from "../../../store/interfaces";
-import Loader from "../../utils/Loader";
+import { isEmpty } from "lodash";
 
-export default function Transactions() {
+export default function Transacoes() {
   const { theme } = useSelector((state: State) => state.themes);
-  const { lastTransactions, loading } = useSelector(
-    (state: State) => state.transactions
-  );
+  const [ listTransactions, setListTransactions ] = useState<Transactions[]>([]);
+  const [ expenses, setExpenses ] = useState<Expenses[]>([]);
+  const [ increases, setIncreases ] = useState<Increases[]>([]);
 
   const [censored, setCensored] = useState(false);
 
   const iconsColor = theme === "dark" ? "#4876AC" : "#2673CE";
-
-  useEffect(() => {
-    const censoredStatusStoraged = localStorage.getItem(
-      "financaWeb.censored.transactions"
-    );
-
-    setCensored(censoredStatusStoraged === "true" ? true : false);
-  }, []);
 
   const handleToggleCensored = () => {
     setCensored(!censored);
 
     localStorage.setItem("financaWeb.censored.transactions", String(!censored));
   };
+
+  useEffect(() => {
+    const expensesList = async () => {
+      const list = await listExpense();
+      setExpenses(list)
+    } 
+    const increaseList = async () => {
+      const list = await listIncrease();
+      setIncreases(list)
+    } 
+    increaseList();
+    expensesList();
+  }, []);
+
+  useEffect(() => {
+    const [transactionsExpense] = expenses.map((expense) => {
+      return {
+        ...expense,
+        type: 'expense',
+      }
+    })
+    const [transactionsIncrease] = increases.map((increase) => {
+      return {
+        ...increase,
+        type: 'increase',
+      }
+    })
+    const transacoes = [transactionsIncrease, transactionsExpense]
+    setListTransactions(transacoes)
+  }, [expenses, increases]);
+
+  console.log('listTransactions', listTransactions)
 
   return (
     <S.Container>
@@ -53,47 +76,32 @@ export default function Transactions() {
         <S.CensoredContainer>
           <FaBan size={40} color={iconsColor} />
         </S.CensoredContainer>
-      ) : loading ? (
-        <Loader
-          height="137.92px"
-          width="360.63px"
-          color="#D4E3F5"
-          rectLength={3}
-          rectProps={{
-            height: "32",
-            rx: "20",
-            ry: "20",
-            y: "0",
-            x: "0",
-            width: "360",
-          }}
-        />
       ) : (
         <S.TransactionsList>
-          {lastTransactions.map((transaction) => {
-            return (
-              <S.TransactionItem textOpacity={0.8} key={transaction.id}>
-                {getCategoryIcon(transaction.category, iconsColor, 20)}
-                <S.TextContainer
-                  regularColor={
-                    transaction.type === "Expanse" ? RED_PRIMARY : GREEN_PRIMARY
-                  }
-                >
-                  <strong>{transaction.title}</strong>
-                  <p>
-                    {transaction.type === "Expanse" && "- "}
-                    {formatNumberFractionalDigits(transaction.value)}
-                  </p>
-                </S.TextContainer>
-                <p>{getDayOfTheMounth(new Date(transaction.paymentDate))}</p>
-              </S.TransactionItem>
-            );
-          })}
-          {!loading && lastTransactions.length === 0 && (
+          {isEmpty(listTransactions) && (
             <S.EmptyItem>
               <p>Nenhuma transação por enquanto</p>
             </S.EmptyItem>
           )}
+          {listTransactions.map((transaction) => {
+            return (
+              <S.TransactionItem textOpacity={0.8} key={transaction?.id}>
+                <S.TextContainer
+                  regularColor={
+                    transaction?.type === "expense" ? RED_PRIMARY : GREEN_PRIMARY
+                  }
+                >
+                  <strong>{transaction?.description}</strong>
+                  <p> R$ 
+                    {transaction?.type === "expense" && "- "}
+                    {formatNumberFractionalDigits(transaction?.value)}
+                  </p>
+                  <p>{new Date(transaction?.date).getDate() + '/' + new Date(transaction?.date).getMonth()}</p>
+                </S.TextContainer>
+
+              </S.TransactionItem>
+            );
+          })}
         </S.TransactionsList>
       )}
     </S.Container>

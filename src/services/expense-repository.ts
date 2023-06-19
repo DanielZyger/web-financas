@@ -1,5 +1,5 @@
 import api from "../config/api";
-import { Expenses } from "../types";
+import { Expenses } from "../store/types";
 
 export const listExpense = async () => {
   try {
@@ -45,7 +45,10 @@ export const listExpense = async () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ description: expense.description, date: expense.date, value: expense.value, category_id: expense.category_id})
+      body: JSON.stringify({ description: expense.description, 
+        date: expense.date, value: expense.value, 
+        category_id: expense.category_id
+      })
     })
     .then(response => {
         if (!response.ok) {

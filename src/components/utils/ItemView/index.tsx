@@ -6,7 +6,7 @@ import { formatNumberFractionalDigits } from "../../../utils/getCurrencyFormat";
 import State from "../../../store/interfaces";
 import { useSelector } from "react-redux";
 import useCollapse from "react-collapsed";
-import { Categories, Expenses, Increases } from "../../../types";
+import { Categories, Expenses, Increases } from "../../../store/types";
 import dayjs from "dayjs";
 import { FaCircle } from "react-icons/fa";
 
@@ -47,6 +47,9 @@ export default function ItemView({
   const date = useMemo(()=> {
     return dayjs(item.date).format('DD/MM/YYYY')
   }, [item]);
+
+  console.log('categorias', categories);
+  console.log('categorias', item);
 
   const getCategory = categories.find((category) => category.id === item.category_id)
 

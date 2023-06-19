@@ -12,7 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Modal from "../../utils/Modal";
 import CreateExpanse from "../CreateExpanse";
 import { deleteExpense, listExpense } from "../../../services/expense-repository";
-import { Categories, Expenses } from "../../../types";
+import { Categories, Expenses } from "../../../store/types";
 import { listCategory } from "../../../services/category-repository";
 
 const schema = yup.object({

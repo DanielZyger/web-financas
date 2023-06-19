@@ -14,10 +14,10 @@ export type Categories = {
 
 export type Expenses = {
     id: number;
-    category_id: number;
     description: string;
     date: Date;
     value: number;
+    category_id: number;
 }
 
 export type Invests = {
@@ -30,8 +30,12 @@ export type Invests = {
 }
 
 export type Users = {
-    id: 3,
+    id: number;
     name: string;
     email: string;
     password: string;
+}
+
+export interface Transactions extends Expenses, Increases {
+    type: string;
 }

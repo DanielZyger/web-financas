@@ -1,6 +1,4 @@
 import api from "../config/api";
-import { accountTypes } from "../utils/types";
-
   
   export const listAccount = () => {
     fetch(`${api}/account`)

@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { deleteIncrease, listIncrease } from "../../../services/increase-repository";
-import { Categories, Increases } from "../../../types";
+import { Categories, Increases } from "../../../store/types";
 import { listCategory } from "../../../services/category-repository";
 
 const schema = yup.object({
@@ -144,8 +144,8 @@ const IncomeList = () => {
               return (
                 <div key={index}>
                     <ItemView
-                      categories={categoryList}
                       item={item}
+                      categories={categoryList}
                       onEdit={(item) => handleOpenEditModal(item)}
                       onDelete={(item) => handleOpenDeleteModal(item)}
                       type="increase"

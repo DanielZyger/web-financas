@@ -1,5 +1,5 @@
 import api from "../config/api";
-import { Users } from "../types";
+import { Users } from "../store/types";
 
   
 export const listUser = async () => {

@@ -1,5 +1,5 @@
 import api from "../config/api";
-import { Categories } from "../types";
+import { Categories } from "../store/types";
 
   
 export const listCategory = async () => {

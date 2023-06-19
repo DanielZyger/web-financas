@@ -12,7 +12,7 @@ import {
 import { FaSave } from "react-icons/fa";
 import { format } from "date-fns";
 import DatePicker from "../../utils/DatePicker";
-import { Categories, Increases } from "../../../types";
+import { Categories, Increases } from "../../../store/types";
 import { createIncrease, updateIncrease } from "../../../services/increase-repository";
 import { listCategory } from "../../../services/category-repository";
 import { useEffect, useState } from "react";
@@ -37,6 +37,7 @@ export default function CreateIncome({
     if (increaseId) {
       await updateIncrease({
         id: increaseId,
+        category_id: data.category_id,
         description: data.description,
         value: data.value,
         date: data.date
@@ -49,6 +50,7 @@ export default function CreateIncome({
 
     await createIncrease({
       description: data.description,
+      category_id: data.category_id,
       value: data.value,
       date: data.date
     })

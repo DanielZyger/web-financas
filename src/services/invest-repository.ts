@@ -1,5 +1,5 @@
 import api from "../config/api";
-import { Invests } from "../types";
+import { Invests } from "../store/types";
 
 export const listInvest = async () => {
   try {

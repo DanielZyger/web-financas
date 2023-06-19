@@ -12,7 +12,7 @@ import {
 import { FaSave } from "react-icons/fa";
 import { format } from "date-fns";
 import DatePicker from "../../utils/DatePicker";
-import { Categories, Expenses } from "../../../types";
+import { Categories, Expenses } from "../../../store/types";
 import { createExpense, updateExpense } from "../../../services/expense-repository";
 import { listCategory } from "../../../services/category-repository";
 import { useEffect, useState } from "react";
@@ -46,7 +46,7 @@ export default function CreateIncome({
       });
       onFinish();
       // eslint-disable-next-line no-restricted-globals
-      // location.reload();
+      location.reload();
       return;
     }
 
@@ -57,7 +57,7 @@ export default function CreateIncome({
       date: data.date
     })
     // eslint-disable-next-line no-restricted-globals
-    // location.reload();
+    location.reload();
     onFinish();
   };
 

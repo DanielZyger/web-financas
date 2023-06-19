@@ -8,7 +8,6 @@ import {
 } from "../../../styles/global";
 
 interface GraphIndicatorProps {
-  heightIndicator: string;
   value?: string;
 }
 
@@ -72,7 +71,7 @@ export const GraphItem = styled.div`
 
 export const GraphIndicator = styled.div<GraphIndicatorProps>`
   background-color: ${ORANGE_SECONDARY};
-  height: ${(props) => props.heightIndicator}%;
+  height: ${(props) => props.value}%;
   border-radius: 10px;
   position: relative;
 

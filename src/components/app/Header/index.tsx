@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { listUser } from "../../../services/user-repository";
-import { Users } from "../../../types";
+import { Users } from "../../../store/types";
 interface HeaderProps {
   expanded?: boolean;
 }
